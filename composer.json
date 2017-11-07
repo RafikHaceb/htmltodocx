@@ -2,6 +2,7 @@
   "name": "nadirhamid/htmltodocx",
   "description": "Finctions for help PHPWord to convert html to docx",
   "type": "",
+  "version": "v1.0.1",
   "authors": [
     {
       "name": "hung",
