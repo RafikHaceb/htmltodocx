@@ -60,5 +60,15 @@ class HtmlToDocx
     {
         $node->dump($node);
     }
+
+    /**
+     * public method
+     * for accessing styles
+     * example
+     */
+    public static function stylesExample()
+    {
+	 return htmltodocx_styles_example();
+    }
 }
 
