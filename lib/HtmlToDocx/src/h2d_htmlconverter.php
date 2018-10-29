@@ -170,7 +170,11 @@ function _htmltodocx_get_style($element, $state)
         $inline_styles = explode(';', rtrim(rtrim($element->attr['style']), ';'));
         foreach ($inline_styles as $inline_style) {
             $style_pair = explode(':', $inline_style);
-            $inline_style_list[] = trim($style_pair[0]) . ': ' . trim($style_pair[1]);
+            // parsing hex format for inline color style
+            if (trim($style_pair[0]) === 'color' && strpos(trim($style_pair[1]), 'rgb') !== false) {
+                $style_pair[1] = getHexFromRGB(trim($style_pair[1])) ;
+            }
+            $inline_style_list[] = trim($style_pair[0]) . ':' . rtrim(trim($style_pair[1]), 'px');
         }
     }
 
@@ -179,14 +183,7 @@ function _htmltodocx_get_style($element, $state)
     }
 
     // Look for style definitions of these inline styles:
-    $inline_styles = array();
-    if (!empty($inline_style_list) && !empty($style_sheet['inline'])) {
-        foreach ($style_sheet['inline'] as $inline_style => $attributes) {
-            if (in_array($inline_style, $inline_style_list)) {
-                $inline_styles = array_merge($inline_styles, $attributes);
-            }
-        }
-    }
+    $inline_styles = $inline_style_list;
 
     $phpword_style = array_merge($phpword_style, $inline_styles);
 
@@ -757,4 +754,18 @@ function htmltodocx_url_encode_chars($url)
     $encoded_url = str_replace($encode_chars, $encoded_chars, $url);
 
     return $encoded_url;
+}
+
+function getHexFromRGB($rgb)
+{
+    $color = substr($rgb, 4 , -1);
+    $color = explode(",", $color);
+    foreach ($color as $value) {
+        $hex_value = dechex($value); 
+        if (strlen($hex_value) < 2) {
+            $hex_value = "0".$hex_value;
+        }
+        $hex_RGB .= $hex_value;
+    }
+    return "#".$hex_RGB;
 }
