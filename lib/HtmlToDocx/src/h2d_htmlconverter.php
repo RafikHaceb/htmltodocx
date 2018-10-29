@@ -11,6 +11,9 @@
  *
  */
 
+// HTML5 semantic tags
+define('HTML5_SEMANTIC_TAGS', array('main', 'article', 'header', 'footer', 'section', 'aside', 'nav'));
+
 // Functions for converting and adding HTML into PHPWord objects
 // for creating a docx document.
 
@@ -32,7 +35,7 @@ function htmltodocx_html_allowed_children($tag = NULL)
 {
 
     $allowed_children = array(
-        'body'   => array('p', 'ul', 'ol', 'table', 'div', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
+        'body'   => array('p', 'ul', 'ol', 'table', 'div', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
         'h1'     => array('a', 'em', 'i', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'),
         'h2'     => array('a', 'em', 'i', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'),
         'h3'     => array('a', 'em', 'i', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'),
@@ -40,7 +43,14 @@ function htmltodocx_html_allowed_children($tag = NULL)
         'h5'     => array('a', 'em', 'i', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'),
         'h6'     => array('a', 'em', 'i', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'),
         'p'      => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p'), // p does not nest - simple_html_dom will create a flat set of paragraphs if it finds nested ones.
-        'div'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6'),
+        'div'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'main'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'article'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'header'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'footer'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'section'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'aside'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
+        'nav'    => array('a', 'em', 'i', 'strong', 'b', 'ul', 'ol', 'img', 'table', 'br', 'span', 'code', 'u', 'sup', 'text', 'div', 'p', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'main', 'article', 'header', 'footer', 'section', 'aside', 'nav'),
         'a'      => array('text', 'img'), // PHPWord doesn't allow elements to be placed in link elements
         'em'     => array('a', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'), // Italic
         'i'      => array('a', 'strong', 'b', 'br', 'span', 'code', 'u', 'sup', 'text'), // Italic
@@ -297,6 +307,13 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
 
             case 'p':
             case 'div': // Treat a div as a paragraph
+            case 'main':
+            case 'article':
+            case 'section':
+            case 'header':
+            case 'footer':
+            case 'aside':
+            case 'nav':
             case 'h1':
             case 'h2':
             case 'h3':
@@ -315,7 +332,7 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
                     break;
                 }
 
-                if ($element->tag == 'div' && $state['table_of_contents_id'] && $element->id == $state['table_of_contents_id']) {
+                if (($element->tag == 'div' || in_array($element->tag, HTML5_SEMANTIC_TAGS)) && $state['table_of_contents_id'] && $element->id == $state['table_of_contents_id']) {
                     // Replace this div with a table of contents:
                     $phpword_element->addTOC($state['current_style'], $state['current_style']);
                     break;
@@ -327,7 +344,7 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
                 // document. In the case of divs this might not always be what is
                 // wanted the setting 'treat_div_as_paragraph' determines whether or
                 // not to add new lines for divs.
-                if ($element->tag != 'div' || $state['treat_div_as_paragraph'] || !isset($state['textrun'])) {
+                if (($element->tag == 'div' || in_array($element->tag, HTML5_SEMANTIC_TAGS)) || $state['treat_div_as_paragraph'] || !isset($state['textrun'])) {
                     $state['textrun'] = $phpword_element->createTextRun($state['current_style']);
                 }
 
