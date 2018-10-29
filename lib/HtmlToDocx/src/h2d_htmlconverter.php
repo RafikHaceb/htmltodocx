@@ -182,6 +182,26 @@ function _htmltodocx_get_style($element, $state)
         $inline_style_list[] = 'text-align: ' . trim($element->attr['align']);
     }
 
+    // Correct width style for table cells
+    if (($element->tag == 'td' || $element->tag == 'th') && !isset($inline_style_list['width'])) {
+        $parent = $element->parent;
+        while ($parent && ($parent->tag !== 'table')) {
+          $parent = $parent->parent;
+        }
+        if ($parent && isset($parent->attr['style'])) {
+          if (strpos($parent->attr['style'], 'width') !== false) {
+            $inline_styles = explode(';', rtrim(rtrim($parent->attr['style']), ';'));
+            foreach ($inline_styles as $inline_style) {
+              $style_pair = explode(':', $inline_style);
+              if (trim($style_pair[0]) === 'width') {
+                $new_width = intval(rtrim(trim($style_pair[1]), 'px')) / count($element->parent->children);
+                $inline_style_list['width'] = $new_width;
+              }
+            }
+          }
+        }
+    }
+
     // Look for style definitions of these inline styles:
     $inline_styles = $inline_style_list;
 
@@ -443,7 +463,7 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
                 if (in_array($element->tag, $allowed_children) && $state['table_allowed']) {
                     unset($state['textrun']);
                     if (isset($state['current_style']['width'])) {
-                        $cell_width = $state['current_style']['width'];
+                        $cell_width = $state['current_style']['width'] * 15;
                     } elseif (isset($element->width)) {
                         $cell_width = $element->width * 15;
                         // Converting at 15 TWIPS per pixel.
