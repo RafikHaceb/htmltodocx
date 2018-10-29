@@ -663,6 +663,7 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
 
             case 'img':
 
+                $element->src = urldecode($element->src);
                 if (strpos($element->src, $state['base_root']) === 0) {
                     // The image source is a full url, but nevertheless it is on this
                     // server.
