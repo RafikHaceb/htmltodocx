@@ -172,7 +172,7 @@ function _htmltodocx_get_style($element, $state)
             $style_pair = explode(':', $inline_style);
             // parsing hex format for inline color style
             if (trim($style_pair[0]) === 'color' && strpos(trim($style_pair[1]), 'rgb') !== false) {
-                $style_pair[1] = getHexFromRGB(trim($style_pair[1])) ;
+                $style_pair[1] = htmltodocx_getHexFromRGB(trim($style_pair[1]));
             }
             $inline_style_list[] = trim($style_pair[0]) . ':' . rtrim(trim($style_pair[1]), 'px');
         }
@@ -648,6 +648,9 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
                 }
                 if (in_array($element->tag, $allowed_children)) {
                     array_unshift($state['parents'], $element->tag);
+                    if (!empty($state['current_style']['background-color'])) {
+                        $state['current_style']['fgColor'] = htmltodocx_getColorName($state['current_style']['background-color']);
+                    }
                     htmltodocx_insert_html_recursive($phpword_element, $element->nodes, $state);
                     array_shift($state['parents']);
                 } else {
@@ -777,7 +780,33 @@ function htmltodocx_url_encode_chars($url)
     return $encoded_url;
 }
 
-function getHexFromRGB($rgb)
+function htmltodocx_getColorName($color)
+{
+  $colors = array(
+    '#000000' => 'black',
+    '#0000FF' => 'blue',
+    '#00FFFF' => 'cyan',
+    '#000080' => 'darkBlue',
+    '#008B8B' => 'darkCyan',
+    '#A9A9A9' => 'darkGray',
+    '#008000' => 'darkGreen',
+    '#8B008B' => 'darkMagenta',
+    '#8B0000' => 'darkRed',
+    '#666600' => 'darkYellow',
+    '#03F111' => 'green',
+    '#D3D3D3' => 'lightGray',
+    '#FF00FF' => 'magenta',
+    '#FF0000' => 'red',
+    '#FFFFFF' => 'white',
+    '#FFFF00' => 'yellow',
+  );
+  if (!isset($color) || '' === $color || !isset($colors[$color])) {
+    return null;
+  }
+  return $colors[$color];
+}
+
+function htmltodocx_getHexFromRGB($rgb)
 {
     $color = substr($rgb, 4 , -1);
     $color = explode(",", $color);
