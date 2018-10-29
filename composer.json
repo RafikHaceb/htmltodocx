@@ -1,8 +1,8 @@
 {
-  "name": "nadirhamid/htmltodocx",
-  "description": "Finctions for help PHPWord to convert html to docx",
+  "name": "rafikhaceb/htmltodocx",
+  "description": "Functions for help PHPWord to convert html to docx",
   "type": "",
-  "version": "v1.0.2",
+  "version": "v1.0.3",
   "authors": [
     {
       "name": "hung",
@@ -13,7 +13,7 @@
     "html to docx word phpword h2d htmltodocx"
   ],
   "require": {
-    "phpoffice/phpword": "v0.13.0"
+    "phpoffice/phpword": "0.15.0"
   },
   "target-dir": "webonyx/htmltodocx",
 
