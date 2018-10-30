@@ -500,7 +500,7 @@ function htmltodocx_insert_html_recursive(&$phpword_element, $html_dom_array, &$
                     array_unshift($state['parents'], $element->tag);
                     foreach ($element->nodes as $node) {
                         if ($node->tag == 'img') {
-                            htmltodocx_insert_html_recursive($phpword_element, [$node], $state);
+                            htmltodocx_insert_html_recursive($phpword_element, array($node), $state);
                         }
                     }
                     array_shift($state['parents']);
